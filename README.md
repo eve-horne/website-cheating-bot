@@ -1,1 +1,1 @@
-# website-cheating-bot
+# Website Cheating Bot Detector
