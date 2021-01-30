@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<link rel="stylesheet" href="mystyle.css">
+		<meta charset="UTF-8">
+		<title>Website Cheating Bot Detector</title>
+		<script type = "text/javascript" src = "vue.js"></script>
+	</head>
+	<body>
+		
+		<div class="mainPage">
+			<p>Website Cheating Bot Detector</p>
+		</div>
+		
+		<div class="leftbar"></div>
+		<div class="rightbar"></div>
+		
+		<form method="post" action="http://web.engr.oregonstate.edu
+		/~perryke/Capstone/dataProcessing.php">
+		
+			<div class="header">Course Code: 
+			<input type="text" name="coursecode" id="coursecode"
+			placeholder="MTH251"></div> <br><br><br>
+			
+			<div class="header">Questions: </div>
+			<br><textarea v-model="message" 
+			placeholder="Put questions here, adding two at (@@) symbols after each one" 
+			name="questions" id="questions"></textarea><br><br><br>
+			
+			<div class="header">Answers: </div>
+			<br><textarea v-model="message" 
+			placeholder="Put answers here, adding two pound (##) symbols after each one" 
+			name="answers" id="answers"></textarea><br><br><br>
+			
+			<input type="submit" value="submit"><br><br>
+			
+		</form>
+	  
+	</body>
+</html>
