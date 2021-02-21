@@ -79,8 +79,17 @@ var app = new Vue({
           postData.query.push([questions[i], answers[i]]);
         }
       }
-      console.log("POST DATA:")
-      console.log(postData)
+      console.log("POST DATA:");
+      console.log(postData);
+      
+      // Sending the data to the node server
+      var req = new XMLHttpRequest();
+      // Change the url here when the actual server is set up
+      var url = 'http://localhost:8030/post-loopback';
+      req.open('POST', url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.send(JSON.stringify(postData));
+      event.preventDefault();
     }
   }
 })
