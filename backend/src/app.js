@@ -17,14 +17,13 @@ app.use(cors());
 
 // The app.post endpoint that the data from the frontend is sent to
 app.post('/post-loopback', function(req, res) {
-	var qParams = [];
-	for (var p in req.body) {
-		qParams.push({'name':p, 'value':req.body[p]})
+
+	for (var p in req.body.query) {
+		var process = spawn('python', ["./scraper.py", req.body.query[p][0]]);
+		process.stdout.on('data', function(data) {
+			console.log(data.toString());
+		})
 	}
-	console.log(req.body.query[0]);
-	
-	var process = spawn('python', ['scraper.py', req.body.query]);
-	
 });
 
 // Placeholder app.use function for 404 error
