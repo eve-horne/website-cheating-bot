@@ -4,7 +4,6 @@ var cors = require('cors');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser');
-
 var spawn = require('child_process').spawn;
 
 // More dependency setup
@@ -17,10 +16,21 @@ app.use(cors());
 
 // The app.post endpoint that the data from the frontend is sent to
 app.post('/post-loopback', function(req, res) {
-
+	
+	// Getting the number of questions
+	var numQuestions = 0;
+	for (var i in req.body.query) {
+		numQuestions++;
+	}
+	console.log(req.body);
+	// Getting the data sent in the network request
 	for (var p in req.body.query) {
+		
+		// Spawning a child process for each question
 		var process = spawn('python', ["./scraper.py", req.body.query[p][0]]);
 		process.stdout.on('data', function(data) {
+			
+			// Printing the URL
 			console.log(data.toString());
 		})
 	}
