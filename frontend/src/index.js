@@ -85,7 +85,7 @@ var app = new Vue({
       // Sending the data to the node server
       var req = new XMLHttpRequest();
       // Change the url here when the actual server is set up
-      var url = 'http://localhost:8030/post-loopback';
+      var url = 'http://localhost:8030/';
       req.open('POST', url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.send(JSON.stringify(postData));
