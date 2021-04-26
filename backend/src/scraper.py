@@ -7,12 +7,13 @@ from bs4 import BeautifulSoup
 
 query = sys.argv[1]
 urlList = []
+matchlist = ["quizlet", "chegg", "coursehero"]
 for j in search(query, tld="com", num=10, stop=10, pause=2): 
-    if "quizlet" in j:
+    if any(x in j for x in matchlist):
         urlList.append(j)
 print(urlList)
 
-#Old Crap
+#Old Code
 # termText = "SetPageTerm-wordText"
 # defText = "SetPageTerm-definitionText"
 
