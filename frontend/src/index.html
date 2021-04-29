@@ -43,6 +43,10 @@
 			<label for="formFile" class="form-label">OR open a CSV file</label>
 			<input class="form-control" type="file" id="formFile" @change="openCSV">
 		  </div>
+		  <div class="mb-3 mt-3">
+			<label for="emailInput" class="form-label">Email:</label>
+			<input type="text" v-model="emailaddress" class="form-control" style="width:30%;" id="emailInput" aria-describedby="emailHelp">
+		  </div>
 		<button type="button" v-on:click="makePost" class="btn btn-primary mb-3">Submit</button>
 	  </form>
 	</div>

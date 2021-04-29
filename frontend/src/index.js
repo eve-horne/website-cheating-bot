@@ -5,7 +5,8 @@ var app = new Vue({
     courseID: "",
     questionsText: "",
     answersText: "",
-    zippedArray: []
+    zippedArray: [],
+    emailaddress: ""
   },
   methods: {
     async openCSV(event) {
@@ -53,7 +54,8 @@ var app = new Vue({
     makePost: function (event) {
       postData = {
         courseID: "",
-        query: []
+        query: [],
+        email: this.emailaddress
       }
 
       if (this.courseID.length <= 1) {
@@ -89,6 +91,13 @@ var app = new Vue({
       req.open('POST', url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.send(JSON.stringify(postData));
+      req.onreadystatechange = function() { 
+        // If the request completed, close the extension popup
+        if (req.readyState == 4)
+          if (req.status == 200) 
+          alert("Your query is being processed, please save your unique query ID:\n\n\n "+ req.responseText + "\n\n\n!!!YOU MUST HAVE THIS ID TO VIEW RESULTS!!!" );
+      };
+      
       event.preventDefault();
     }
   }
