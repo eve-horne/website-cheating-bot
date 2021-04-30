@@ -2,11 +2,19 @@
 var express = require('express');
 var cors = require('cors');
 var app = express();
+var https = require("https")
+var http = require("http")
 var bodyParser = require('body-parser');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 const uuidv4 = require("uuid")
 var nodemailer = require("nodemailer")
+
+
+var options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/hax.services/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/hax.services/fullchain.pem')
+}
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://dev:PLACEHOLDERASKFORPASSWORD@websitebotdetector.xvumv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -85,7 +93,7 @@ async function sendEmail(email, token) {
 		from: '"No Reply " <websitecheatingbot@gmail.com>', // sender address
 		to: email, // list of receivers
 		subject: "Your query token", // Subject line
-		text: "You recently started a query, below is your token: \n \n " + token, // plain text body
+		text: "You recently started a query, below is your token: \n \n " + token + "\n\n https://hax.services/dashboard.html", // plain text body
 		html: "", // html body
 	  }
 	  transporter.sendMail(mailoptions, function(err, info){
@@ -95,10 +103,9 @@ async function sendEmail(email, token) {
 }
 
 // Listening on the port
-app.listen(app.get('port'), function () {
-	console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
-});
 
+https.createServer(options,app).listen(8030);
+console.log("started")
 
 
 
@@ -110,7 +117,7 @@ async function scrape(queryObj) {
 	for (var p in queryObj.query) {
 
 		// Spawning a child process for each question
-		var process = spawn('python', ["./scraper.py", queryObj.query[p][0]]);
+		var process = spawn('python3', ["./scraper.py", queryObj.query[p][0]]);
 		process.stdout.on('data', async function (data) {
 
 			// If an actual URL is returned from the scraper
