@@ -1,8 +1,5 @@
 textarea {
 	height: 150px;
-<<<<<<< Updated upstream
-  }
-=======
   }
   .modal-mask {
     position: fixed;
@@ -72,4 +69,3 @@ textarea {
     transform: scale(1.1);
   }
   
->>>>>>> Stashed changes
