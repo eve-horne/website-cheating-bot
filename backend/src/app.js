@@ -9,13 +9,13 @@ const uuidv4 = require("uuid")
 var nodemailer = require("nodemailer")
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://dev:cheatingisbad@websitebotdetector.xvumv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = "mongodb+srv://dev:PLACEHOLDERASKFORPASSWORD@websitebotdetector.xvumv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 let transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth:{
 		user: 'websitecheatingbot@gmail.com',
-		pass: 'Cheatingisbad!1'
+		pass: 'PLACEHOLDERASKFORPASSWORD'
 	}
   });
   
@@ -34,8 +34,6 @@ app.post('/getQuery', async function (req, res) {
 		await client.connect();
 		const database = client.db('queryData');
 		const results = database.collection('results');
-		// Query for a movie that has the title 'Back to the Future'
-	
 		const queryObj = results.findOne({id: req.body.id}, async function (err, result){
 			if (err) throw err;
 			console.log(result)
@@ -66,7 +64,6 @@ app.post('/', async function (req, res) {
 		await client.connect();
 		const database = client.db('queryData');
 		const results = database.collection('results');
-		// Query for a movie that has the title 'Back to the Future'
 		
 		results.insertOne(queryObj, async function (err, res) {
 			if (err) throw err;
