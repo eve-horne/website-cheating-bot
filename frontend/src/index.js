@@ -1,3 +1,7 @@
+Vue.component("modal", {
+  template: "#modal-template"
+});
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -5,7 +9,10 @@ var app = new Vue({
     courseID: "",
     questionsText: "",
     answersText: "",
-    zippedArray: []
+    zippedArray: [],
+    emailaddress: "",
+    showModal: false,
+    queryToken: ""
   },
   methods: {
     async openCSV(event) {
@@ -51,9 +58,11 @@ var app = new Vue({
       this.hasFile = true;
     },
     makePost: function (event) {
+      var comp = this;
       postData = {
         courseID: "",
-        query: []
+        query: [],
+        email: this.emailaddress
       }
 
       if (this.courseID.length <= 1) {
@@ -81,14 +90,23 @@ var app = new Vue({
       }
       console.log("POST DATA:");
       console.log(postData);
-      
       // Sending the data to the node server
       var req = new XMLHttpRequest();
       // Change the url here when the actual server is set up
-      var url = 'http://localhost:8030/';
+      var url = 'https://hax.services:8030/';
       req.open('POST', url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.send(JSON.stringify(postData));
+      req.onreadystatechange = function() { 
+        // If the request completed, close the extension popup
+        if (req.readyState == 4)
+          if (req.status == 200) 
+          // alert("Your query is being processed, please save your unique query ID:\n\n\n "+ req.responseText + "\n\n\n!!!YOU MUST HAVE THIS ID TO VIEW RESULTS!!!" );
+          comp.queryToken = req.responseText;
+          comp.showModal = true;   
+      };
+      
+      
       event.preventDefault();
     }
   }
