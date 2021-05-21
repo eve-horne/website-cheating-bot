@@ -17,13 +17,14 @@ var options = {
 }
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://dev:PLACEHOLDERASKFORPASSWORD@websitebotdetector.xvumv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-
+const uri = "mongodb+srv://dev:cheatingisbad@websitebotdetector.xvumv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect();
 let transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth:{
 		user: 'websitecheatingbot@gmail.com',
-		pass: 'PLACEHOLDERASKFORPASSWORD'
+		pass: 'Cheatingisbad!1'
 	}
   });
   
@@ -37,17 +38,35 @@ app.use(cors());
 // The app.post endpoint that the data from the frontend is sent to
 app.post('/getQuery', async function (req, res) {
 	
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+	// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
-		await client.connect();
+		// await client.connect();
 		const database = client.db('queryData');
 		const results = database.collection('results');
-		const queryObj = results.findOne({id: req.body.id}, async function (err, result){
-			if (err) throw err;
-			console.log(result)
-			await client.close();
-			res.send(result)
-		});
+		if (req.body.id != "" && req.body.course == "") {
+			const queryObj = results.findOne({id: req.body.id}, async function (err, result){
+				if (err) throw err;
+				result["multi"] = false;
+				console.log(result)
+				// await client.close();
+				res.send(result);
+			});
+		}
+		else if (req.body.id == "" && req.body.course != "") {
+			console.log("~~~~~COURSE ID ONLY~~~~~~")
+			const queryObj = results.find({class: req.body.course}).toArray( async function (err, result){
+				console.log(req.body.course);
+				if (err) throw err;
+				console.log(result)
+				// await client.close();
+				res.send(result);
+			});
+		}
+		else {
+			// await client.close();
+			res.status(400).send();
+		}
+		
 		
 		
 
@@ -56,7 +75,7 @@ app.post('/getQuery', async function (req, res) {
 	}
 });
 app.post('/', async function (req, res) {
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+	// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 	// Getting the data sent in the network request
 	var email = req.body.email;
@@ -65,18 +84,23 @@ app.post('/', async function (req, res) {
 		status: "Processing",
 		class: req.body.courseID,
 		query: req.body.query,
-		results: []
+		results: [],
+		date: new Date()
 	};
 	
 	try {
-		await client.connect();
+		
+		// await client.connect();
+		console.log("CLIENT 1 IS UP");
 		const database = client.db('queryData');
 		const results = database.collection('results');
 		
 		results.insertOne(queryObj, async function (err, res) {
 			if (err) throw err;
 			console.log("Inserted entry sucessfully!");
-			await client.close();
+			
+			// await client.close();
+			console.log("CLIENT 1 JUST CLOSED");
 			scrape(queryObj);
 		});
 
@@ -112,7 +136,7 @@ console.log("started")
 
 
 async function scrape(queryObj) {
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+	// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	const filter = {id: queryObj.id}
 	for (var p in queryObj.query) {
 
@@ -123,7 +147,8 @@ async function scrape(queryObj) {
 			// If an actual URL is returned from the scraper
 			if ((data.toString()).length > 5) {
 				try {
-					await client.connect();
+					// await client.connect();
+					console.log("CLIENT 2 IS UP");
 					const database = client.db('queryData');
 					const results = database.collection('results');
 					const updateDoc = {
@@ -134,7 +159,8 @@ async function scrape(queryObj) {
 					results.updateOne(filter,updateDoc, {upsert: false}, async function (err, res) {
 						if (err) throw err;
 						console.log("updated entry sucessfully!");
-						await client.close();
+						// await client.close();
+						console.log("CLIENT 2 JUST CLOSED");
 					});
 			
 				} finally {
@@ -149,10 +175,11 @@ async function scrape(queryObj) {
 	markDone(queryObj.id);
 }
 async function markDone(objid) {
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+	// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	const filter = {id: objid}
 	try {
-		await client.connect();
+		// await client.connect();
+		console.log("CLIENT 3 IS UP");
 		const database = client.db('queryData');
 		const results = database.collection('results');
 		const updateDoc = {
@@ -163,7 +190,8 @@ async function markDone(objid) {
 		results.updateOne(filter,updateDoc, {upsert: false}, async function (err, res) {
 			if (err) throw err;
 			console.log("updated entry sucessfully!");
-			await client.close();
+			// await client.close();
+			console.log("CLIENT 3 JUST CLOSED");
 		});
 
 	} finally {

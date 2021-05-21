@@ -5,7 +5,7 @@
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-		<link href="/mystyle.css" rel="stylesheet">
+	<link href="/mystyle.css" rel="stylesheet">
 	<meta charset="UTF-8">
 	<title>Website Cheating Bot Detector</title>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
@@ -22,52 +22,101 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 		<a class="navbar-brand ml-3" id="brandtitle" href="#">Website Cheating Bot Detector</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
 		</button>
-	  
+
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		  <ul class="navbar-nav mr-auto">
-			<li class="nav-item active">
-			  <a class="nav-link" href="/index.html">Query</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link active" href="/dashboard.html">Dashboard</a>
-			</li>
-		  </ul>
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="/index.html">Query</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="/dashboard.html">Dashboard</a>
+				</li>
+			</ul>
 
 		</div>
-	  </nav>
+	</nav>
 	<div id="app">
-	<div class="container-sm" id="title">
-		<br>
-	</div>
-	<div class="container-sm border border-2 rounded" id="form-container">
-		<h1>Dashboard</h1>
-		<hr>
-		<div class="mb-3 mt-3">
-			<label for="classInput" class="form-label">Query ID:</label>
-			<input type="text" v-model="queryID" class="form-control" style="width:100%;" id="classInput" aria-describedby="classHelp">
-		  </div>
-        <button type="button" v-on:click="getData" class="btn btn-primary mb-3">Submit</button>
-        <div>
-			<h1>Status: {{status}}</h1>
+		<div class="container-sm" id="title">
+			<br>
+		</div>
+		<div class="container-sm border border-2 rounded" id="form-container">
+			<h1>Dashboard</h1>
 			<hr>
-			<h2>Class ID: {{classid}}</h2>
-			<h2>Total found: <span style="color:red;" >{{numRes}}</span></h2>
-			<h2>Results:</h2>
-			(potential offending sites)
-            <ul>
-                <li v-for="result in results">{{result}}</li>
-            </ul>
-            <h2>Query Items:</h2>
-            <ul>
-                <li v-for="qa in query">{{qa}}</li>
-            </ul>
-        </div>
+			<div class="mb-3 mt-3">
+				<label for="classInput" class="form-label">Course ID:</label>
+				<input type="text" v-model="courseID" class="form-control" style="width:10%;" id="courseInput"
+					aria-describedby="courseHelp" v-on:click="clearIdBox">
+				<b>OR:</b>
+				<br>
+				<label for="classInput" class="form-label">Query ID:</label>
+				<input type="text" v-model="queryID" class="form-control" style="width:100%;" id="classInput"
+					aria-describedby="classHelp" v-on:click="clearClassBox">
+			</div>
+			<button type="button" v-on:click="getData" class="btn btn-primary mb-3">Submit</button>
+			<template v-if="single">
+				<div>
+					<h1>Status: {{status}}</h1>
+					<hr>
+					<h3>Class ID: {{classid}}</h3>
+					<h3>Total found: <span style="color:red;">{{numRes}}</span></h3>
+					<h3>Date of Query: {{dateofquery}}</h3>
+					<h3>Results:</h3>
+					(potential offending sites)
+					<ul>
+						<li v-for="result in results">{{result}}</li>
+					</ul>
+					<h3>Query Items:</h3>
+					<ul>
+						<li v-for="qa in query">{{qa}}</li>
+					</ul>
+				</div>
+			</template>
+			<template v-if="multi">
+
+
+
+
+				<div v-for="(obj, idx) in dataArr">
+
+
+					<div class="accordion" id="accordionExample">
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingOne">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse"
+									v-bind:data-bs-target="'#collapse' + idx" aria-expanded="true" aria-controls="collapseOne">
+									<h3 class="accID">{{obj.classid}}</h3>  <h3 class="accNum" style="color:red;">{{obj.numRes}} Sites found</h3> <h3 class="accDate">{{obj.datequery}}</h3>
+								</button>
+							</h2>
+							<div v-bind:id="'collapse' + idx" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+								data-bs-parent="#accordionExample">
+								<div class="accordion-body">
+									<h1>Status: {{obj.status}}</h1>
+									<hr>
+									<h3>Class ID: {{obj.classid}}</h3>
+									<h3>Total found: <span style="color:red;">{{obj.numRes}}</span></h3>
+									<h3>Date of Query: {{obj.datequery}}</h3>
+									<h3>Results:</h3>
+									(potential offending sites)
+									<ul>
+										<li v-for="result in obj.results">{{result}}</li>
+									</ul>
+									<h3>Query Items:</h3>
+									<ul>
+										<li v-for="qa in obj.query">{{qa}}</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
 	</div>
-</div>
-<script src="dashboard.js"></script>
+	<script src="dashboard.js"></script>
 </body>
 
 </html>

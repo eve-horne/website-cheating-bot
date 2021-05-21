@@ -8,13 +8,20 @@ var app = new Vue({
     hasFile: false,
     courseID: "",
     questionsText: "",
-    answersText: "",
+    // answersText: "",
     zippedArray: [],
     emailaddress: "",
     showModal: false,
-    queryToken: ""
+    queryToken: "",
+    questionRows: []
   },
   methods: {
+    addRow: function(event) {
+      event.preventDefault();
+      this.questionRows.push(this.questionsText);
+      this.questionsText = "";
+    },
+
     async openCSV(event) {
       let file = event.target.files;
       if (file.length === 0) {
@@ -67,25 +74,25 @@ var app = new Vue({
 
       if (this.courseID.length <= 1) {
         alert("INVALID/MISSING COURSE ID");
-        location.reload();
+        return;
       }
       postData.courseID = this.courseID
       console.log(this.hasFile);
-      if (this.answersText.split(",").length !== this.questionsText.split(",").length && this.hasFile != true) {
-        alert("MISMATCHED NUMBER OF QUESTIONS AND ANSWERS");
-        location.reload();
-      }
-      else if (this.hasFile === true) {
+      // if (this.answersText.split(",").length !== this.questionsText.split(",").length && this.hasFile != true) {
+      //   alert("MISMATCHED NUMBER OF QUESTIONS AND ANSWERS");
+      //   return;
+      // }
+      if (this.hasFile === true) {
         console.log("ITS TRUE");
         postData.query = this.zippedArray;
       }
       else {
-        const questions = this.questionsText.split(",")
-        const answers = this.answersText.split(",")
-        console.log(questions);
-        console.log(answers);
-        for (let i = 0; i < questions.length; i++) {
-          postData.query.push([questions[i], answers[i]]);
+        
+        console.log(this.questionRows);
+      
+        
+        for (q in this.questionRows) {
+          postData.query.push([this.questionRows[q]]);
         }
       }
       console.log("POST DATA:");

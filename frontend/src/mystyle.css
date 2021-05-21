@@ -12,7 +12,14 @@ textarea {
     display: table;
     transition: opacity 0.3s ease;
   }
-  
+
+  .accID {
+    margin-right: 10px;
+  }
+  .accDate {
+    text-align: right;
+    margin-left: 10px;
+  }
   .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
