@@ -12,8 +12,8 @@ var nodemailer = require("nodemailer")
 
 
 var options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/hax.services/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/hax.services/fullchain.pem')
+    key: fs.readFileSync('location to private key here'),
+    cert: fs.readFileSync('location to certificate here')
 }
 
 const MongoClient = require('mongodb').MongoClient;
