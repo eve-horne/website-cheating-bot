@@ -67,8 +67,7 @@
 					<h3>Results:</h3>
 					(potential offending sites)
 					<ul>
-						<!-- <li v-for="result in obj.results"><a href={{results}}>{{results}}</a></li> -->
-						<li v-for="result in results">{{result}}</li>
+						<li v-for="result in results"><a v-bind:href="result">{{result}}</a></li>
 					</ul>
 					<h3>Query Items:</h3>
 					<ul>
